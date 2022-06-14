@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Atro Team Balancer</title>
+  <title>Team Balancer</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
 
-  <h1>Atro Team Balancer</h1>
+  <h1>Team Balancer</h1>
 
   <form>
     <div class="input-row">
@@ -48,7 +48,7 @@
   <div hidden id="t1">
 
     <h2 style="text-align: center">Team 1</h2>
-  
+
     <table>
       <thead>
         <tr>
@@ -61,11 +61,11 @@
     </table>
 
   </div>
-  
+
   <div hidden id="t2">
 
     <h2 style="text-align: center">Team 2</h2>
-  
+
     <table>
       <thead>
         <tr>
@@ -81,14 +81,12 @@
 
   <script>
 
-    class player
-    {
-        constructor(name, position, rating)
-        {
-            this.name = name;
-            this.position = position;
-            this.rating = rating;
-        }
+    class player {
+      constructor(name, position, rating) {
+        this.name = name;
+        this.position = position;
+        this.rating = rating;
+      }
     }
 
     var positions = new Array();
@@ -120,7 +118,7 @@
     var options = '';
 
     for (var i = 0; i < positions.length; i++) {
-    options += '<option value="' + positions[i] + '" />';
+      options += '<option value="' + positions[i] + '" />';
     }
 
     document.getElementById('positions').innerHTML = options;
@@ -131,8 +129,7 @@
       var position = document.getElementById("position").value;
       var rating = document.getElementById("rating").value;
 
-      if (positions.includes(position))
-      {
+      if (positions.includes(position)) {
         e.preventDefault();
 
         players.push(new player(name, position, rating));
@@ -154,7 +151,7 @@
 
     function Init(item) {
 
-    tbody.innerHTML += `
+      tbody.innerHTML += `
       <tr>
           <td>${item.name}</td>
           <td>${item.position}</td>
@@ -188,7 +185,7 @@
       }
     }
 
-      const sortByRating = (a, b) => {
+    const sortByRating = (a, b) => {
       if (a.rating < b.rating) {
         return -1
       }
@@ -200,8 +197,12 @@
       return 0
     }
 
-    function Calc()
-    {
+    function Calc() {
+      var totalRating = 0;
+      players.forEach(player => {
+        totalRating += player.rating;
+      });
+
       const T1 = document.getElementById("t1");
       const T2 = document.getElementById("t2");
       const T1B = document.getElementById("Team1Body");
@@ -215,11 +216,11 @@
       var Team1 = [];
       var Team2 = [];
 
-      while(T1B.rows.length > 0) {
+      while (T1B.rows.length > 0) {
         T1B.deleteRow(0);
       }
 
-      while(T2B.rows.length > 0) {
+      while (T2B.rows.length > 0) {
         T2B.deleteRow(0);
       }
 
@@ -230,44 +231,38 @@
 
       var coinFlip = Math.floor(Math.random() * 2);
       var picker;
-      
-      if(coinFlip === 1)
-      {
+
+      if (coinFlip === 1) {
         picker = "Team1";
       }
-      else
-      {
+      else {
         picker = "Team2";
       }
 
       // Split players into groups by position
       players.forEach(player => {
-        if(player.position == "GK")
-        {
+        if (player.position == "GK") {
           gk.push(player);
         }
 
-        if(player.position == "DEF")
-        {
+        if (player.position == "DEF") {
           def.push(player);
         }
 
-        if(player.position == "MID")
-        {
+        if (player.position == "MID") {
           mid.push(player);
         }
 
-        if(player.position == "ATT")
-        {
+        if (player.position == "ATT") {
           att.push(player);
         }
       });
 
       // Order player position groups by rating
-      gk.sort(sortByRating);
-      def.sort(sortByRating);
-      mid.sort(sortByRating);
-      att.sort(sortByRating);
+      //gk.sort(sortByRating);
+      //def.sort(sortByRating);
+      //mid.sort(sortByRating);
+      //att.sort(sortByRating);
 
       // Store the origanl array length so it does not change when we remove elements
       GK_Original_Length = gk.length;
@@ -276,18 +271,16 @@
       ATT_Original_Length = att.length;
 
       // Pick GK
-      for(let i = 0; i < GK_Original_Length; i++) {
+      for (let i = 0; i < GK_Original_Length; i++) {
 
         var random = Math.floor(Math.random() * gk.length);
         var selectedPlayer = gk[random];
 
-        if(picker === "Team1")
-        {
+        if (picker === "Team1") {
           Team1.push(selectedPlayer);
           picker = "Team2";
         }
-        else
-        {
+        else {
           Team2.push(selectedPlayer);
           picker = "Team1"
         }
@@ -300,18 +293,16 @@
       }
 
       // Pick DEF
-      for(let i = 0; i < DEF_Original_Length; i++) {
+      for (let i = 0; i < DEF_Original_Length; i++) {
 
         var random = Math.floor(Math.random() * def.length);
         var selectedPlayer = def[random];
 
-        if(picker === "Team1")
-        {
+        if (picker === "Team1") {
           Team1.push(selectedPlayer);
           picker = "Team2";
         }
-        else
-        {
+        else {
           Team2.push(selectedPlayer);
           picker = "Team1"
         }
@@ -324,18 +315,16 @@
       }
 
       // Pick MID
-      for(let i = 0; i < MID_Original_Length; i++) {
+      for (let i = 0; i < MID_Original_Length; i++) {
 
         var random = Math.floor(Math.random() * mid.length);
         var selectedPlayer = mid[random];
 
-        if(picker === "Team1")
-        {
+        if (picker === "Team1") {
           Team1.push(selectedPlayer);
           picker = "Team2";
         }
-        else
-        {
+        else {
           Team2.push(selectedPlayer);
           picker = "Team1"
         }
@@ -348,18 +337,16 @@
       }
 
       // Pick ATT
-      for(let i = 0; i < ATT_Original_Length; i++) {
+      for (let i = 0; i < ATT_Original_Length; i++) {
 
         var random = Math.floor(Math.random() * att.length);
         var selectedPlayer = att[random];
 
-        if(picker === "Team1")
-        {
+        if (picker === "Team1") {
           Team1.push(selectedPlayer);
           picker = "Team2";
         }
-        else
-        {
+        else {
           Team2.push(selectedPlayer);
           picker = "Team1"
         }
@@ -379,7 +366,7 @@
       Team1.forEach(player => {
 
         Team1Rating += player.rating;
-        Team1Count ++;
+        Team1Count++;
 
         T1B.innerHTML += `
       <tr>
@@ -404,29 +391,26 @@
         Team2Rating += player.rating;
         Team2Count++;
 
-        T2B.innerHTML += `
-      <tr>
+        T2B.innerHTML +=
+          `<tr>
           <td>${player.name}</td>
           <td>${player.position}</td>
           <td>${player.rating}</td>
-      </tr>
-    `;
+      </tr>`;
       });
 
-      T2B.innerHTML += `
-      <tr>
+      T2B.innerHTML +=
+        `<tr>
         <td><b> Count: ${Team2Count} </b></td>
           <td></td>
           <td> <b>${Team2Rating}</b> </td>
-      </tr>
-    `;
-
+      </tr>`;
     }
 
     form.addEventListener("submit", Add);
     table.addEventListener("click", Delete);
     //table2.addEventListener("click", Calc)
-    
+
   </script>
 
 </body>
