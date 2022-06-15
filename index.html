@@ -365,7 +365,7 @@
       // Add footer info to resultant team 1 table
       Team1.forEach(player => {
 
-        Team1Rating += player.rating;
+        Team1Rating += parseInt(player.rating);
         Team1Count++;
 
         T1B.innerHTML += `
@@ -388,7 +388,7 @@
       // Add footer info to resultant team 1 table
       Team2.forEach(player => {
 
-        Team2Rating += player.rating;
+        Team2Rating += parseInt(player.rating)
         Team2Count++;
 
         T2B.innerHTML +=
