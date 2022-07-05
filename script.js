@@ -168,14 +168,20 @@ function Switch(e) {
     {
         // Find the player to remove
         let p = Team1.find((player) => player.name == name);
-        Team1PlayerSwitch.push(p);
+        if(p!=null)
+        {
+            Team1PlayerSwitch.push(p);
+        }
     }
     
     if(id = "Team2")
     {
         // Find the player to remove
         let p = Team2.find((player) => player.name == name);
-        Team2PlayerSwitch.push(p);
+        if(p!=null)
+        {
+            Team2PlayerSwitch.push(p);
+        }
     }
 
     if(Team1PlayerSwitch != null && Team2PlayerSwitch != null)
