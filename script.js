@@ -61,7 +61,7 @@ var posIndexes;
 var Index;
 
 // Switch List
-PlayerSwitch = [];
+Team1PlayerSwitch = [];
 
 // ***CRUD START*** //
 
@@ -167,22 +167,24 @@ function Switch(e) {
     {
         // Find the player to remove
         let Player = Team1.find((player) => player.name == name);
-        PlayerSwitch.push(Player);
+        Team1PlayerSwitch.push(Player);
     }
     else if(id = "Team2")
     {
         // Find the player to remove
         let Player = Team2.find((player) => player.name == name);
-        PlayerSwitch.push(Player);
+        Team2PlayerSwitch.push(Player);
     }
 
-    if(PlayerSwitch.length == 2)
+    if(Team1PlayerSwitch != null && Team2PlayerSwitch != null)
     {
-        console.log(PlayerSwitch);
-        swap(Team1, Team2, PlayerSwitch[0], PlayerSwitch[1]);
+        console.log(Team1PlayerSwitch);
+        console.log(Team2PlayerSwitch);
+        swap(Team1, Team2, Team1PlayerSwitch, Team2PlayerSwitch);
         
         // Clear Switch Lits
-        PlayerSwitch = [];
+        Team1PlayerSwitch = [];
+        Team2PlayerSwitch = [];
 
         // Repaint
         DrawTeamTable(Team1, T1B, Team1.length, Team1Rating);
