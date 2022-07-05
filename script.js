@@ -127,7 +127,7 @@ function Delete(e) {
     var name = e.path[3].children[0].innerText;
 
     // Ensure the delete button was clicked, by returning if the class was not found
-    if (!e.target.classList.contains("fa-trash")) {
+    if (!e.target.classList.contains("fa-trash") && !e.target.style.color == "green") {
         return;
     }
 
