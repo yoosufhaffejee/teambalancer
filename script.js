@@ -33,7 +33,6 @@ const DefaultPlayers = [
 // List of all players
 var players = [];
 
-const form = document.querySelector("form");
 const tbody = document.getElementById("MainTableBody");
 const table = document.getElementById("MainTable");
 
@@ -64,7 +63,7 @@ var Index;
 // ***CRUD START*** //
 
 // Create
-function Add(e) {
+function Add() {
 
     var name = document.getElementById("name").value;
     var position = document.getElementById("position").value;
@@ -72,8 +71,7 @@ function Add(e) {
     
     // Check if a valid position was entered
     if (positions.includes(position)) {
-        e.preventDefault();
-        
+
         // Name and Rating should not be blank
         if(name == "" || rating == "")
         {
@@ -481,5 +479,5 @@ function CheckDuplicate(Team, Player)
 
 // ***HELPERS END*** //
 
-form.addEventListener("submit", Add);
+// Event Listeners
 table.addEventListener("click", Delete);
