@@ -166,20 +166,21 @@ function Switch(e) {
     if(id = "Team1")
     {
         // Find the player to remove
-        let Player = Team1.find((player) => player.name == name);
-        Team1PlayerSwitch.push(Player);
+        let p = Team1.find((player) => player.name == name);
+        Team1PlayerSwitch.push(p);
     }
-    else if(id = "Team2")
+    
+    if(id = "Team2")
     {
         // Find the player to remove
-        let Player = Team2.find((player) => player.name == name);
-        Team2PlayerSwitch.push(Player);
+        let p = Team2.find((player) => player.name == name);
+        Team2PlayerSwitch.push(p);
     }
 
     if(Team1PlayerSwitch != null && Team2PlayerSwitch != null)
     {
-        console.log(Team1PlayerSwitch);
-        console.log(Team2PlayerSwitch);
+        console.log("T1", Team1PlayerSwitch);
+        console.log("T2", Team2PlayerSwitch);
         swap(Team1, Team2, Team1PlayerSwitch, Team2PlayerSwitch);
         
         // Clear Switch Lits
@@ -188,7 +189,7 @@ function Switch(e) {
 
         // Repaint
         DrawTeamTable(Team1, T1B, Team1.length, Team1Rating);
-        DrawTeamTable(Team2, T12, Team2.length, Team2Rating);
+        DrawTeamTable(Team2, T2B, Team2.length, Team2Rating);
     }
     else
     {
