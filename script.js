@@ -179,8 +179,8 @@ function Switch(e) {
 
     if(Team1PlayerSwitch != null && Team2PlayerSwitch != null)
     {
-        console.log("T1", Team1PlayerSwitch);
-        console.log("T2", Team2PlayerSwitch);
+        //console.log("T1", Team1PlayerSwitch);
+        //console.log("T2", Team2PlayerSwitch);
         swap(Team1, Team2, Team1PlayerSwitch, Team2PlayerSwitch);
         
         // Clear Switch Lits
