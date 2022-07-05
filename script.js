@@ -60,6 +60,9 @@ var Team2Rating = 0;
 var posIndexes;
 var Index;
 
+// Switch List
+PlayerSwitch = [];
+
 // ***CRUD START*** //
 
 // Create
@@ -144,6 +147,53 @@ function Delete(e) {
     btn.closest("tr").remove();
 
     // *We could redraw the entire table instead, but it is less efficient
+}
+
+// Switch
+function Switch(e) {
+
+    // Ensure the switch button was clicked, by returning if the class was not found
+    if (!e.target.classList.contains("fa-sync")) {
+        return;
+    }
+
+    // Get the name of the player to switch
+    var name = e.path[3].children[0].innerText;
+
+    // Get the table ID to know where to search for player
+    var id = e.path[6].id;
+
+    if(id = "Team1")
+    {
+        // Find the player to remove
+        let Player = Team1.find((player) => player.name == name);
+        PlayerSwitch.push(Player);
+    }
+    else if(id = "Team2")
+    {
+        // Find the player to remove
+        let Player = Team2.find((player) => player.name == name);
+        PlayerSwitch.push(Player);
+    }
+
+    if(PlayerSwitch.length == 2)
+    {
+        console.log(PlayerSwitch);
+        swap(Team1, Team2, PlayerSwitch[0], PlayerSwitch[1]);
+        
+        // Clear Switch Lits
+        PlayerSwitch = [];
+
+        // Repaint
+        DrawTeamTable(Team1, T1B, Team1.length, Team1Rating);
+        DrawTeamTable(Team2, T12, Team2.length, Team2Rating);
+    }
+    else
+    {
+        if (e.target.classList.contains("fa-sync")) {
+            e.target.style.color = "grey";
+        }
+    }
 }
 
 // ***CRUD END*** //
@@ -267,9 +317,6 @@ function Balance()
         
         Team1Count = Team1.length;
         Team2Count = Team2.length;
-        
-        Team1Rating = CalculateRating(Team1);
-        Team2Rating = CalculateRating(Team2);
         
         DrawTeamTable(Team1, T1B, Team1Count, Team1Rating);
         DrawTeamTable(Team2, T2B, Team2Count, Team2Rating);
@@ -408,6 +455,7 @@ function DrawTeamTable(Team, Table, Count, Rating) {
     		<td>${player.name}</td>
     		<td>${player.position}</td>
     		<td>${player.rating}</td>
+            <td><a><i style="color: green" class="fa fa-sync"></i></a></td>
 		</tr>
 		`;
     });
@@ -417,6 +465,7 @@ function DrawTeamTable(Team, Table, Count, Rating) {
       <td><b> Count: ${Count} </b></td>
       <td></td>
       <td> <b>${Rating}</b> </td>
+      <td></td>
 	</tr>
 	`;
 }
@@ -463,6 +512,9 @@ function swap(Team1, Team2, Player1, Player2)
     if (Player2Index !== -1) {
         Team2.splice(Player2Index, 1);
     }
+
+    Team1Rating = CalculateRating(Team1);
+    Team2Rating = CalculateRating(Team2);
 }
 
 function ValidSwap(Team1, Team2, Player1, Player2)
@@ -539,3 +591,5 @@ function CheckDuplicate(Team, Player)
 
 // Event Listeners
 table.addEventListener("click", Delete);
+T1.addEventListener("click", Switch);
+T2.addEventListener("click", Switch);
