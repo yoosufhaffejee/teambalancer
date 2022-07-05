@@ -273,8 +273,6 @@ function Balance()
         
         DrawTeamTable(Team1, T1B, Team1Count, Team1Rating);
         DrawTeamTable(Team2, T2B, Team2Count, Team2Rating);
-        
-        console.log("Teams", Team1, Team2);
     }
 }
 
@@ -314,13 +312,16 @@ function FindPlayersToSwap(PositionArray1, PositionArray2, Position, Shortfall)
         for (let i = 0; i < PositionArray1.length; i++) {
             for (let j = 0; j < PositionArray2.length; j++) {
 
-                if (Math.abs(PositionArray1[i].rating - PositionArray2[j].rating) == Shortfall) {
+                if (Math.abs(PositionArray1[i].rating - PositionArray2[j].rating) <= Shortfall && ValidSwap(Team1, Team2, PositionArray1[i], PositionArray2[j])) {
                 	
                     console.log("swapping", PositionArray1[i], PositionArray2[j]);
                     // Swap players
                     swap(Team1, Team2, PositionArray1[i], PositionArray2[j]);
                     // Break While (Do not check for valid swaps in other positions)
-                    posIndexes = [];
+                    if(Math.abs(PositionArray1[i].rating - PositionArray2[j].rating) == Shortfall)
+                    {
+                        posIndexes = [];
+                    }
                     // Break out of loop
                     return;
                 }
@@ -461,6 +462,63 @@ function swap(Team1, Team2, Player1, Player2)
 
     if (Player2Index !== -1) {
         Team2.splice(Player2Index, 1);
+    }
+}
+
+function ValidSwap(Team1, Team2, Player1, Player2)
+{
+    tmp1 = [];
+    Team1.forEach(element => {
+        tmp1.push(element);
+    });
+
+    tmp2 = [];
+    Team2.forEach(element => {
+        tmp2.push(element);
+    });
+
+    let tmp1Rating = 0;
+    let tmp2Rating = 0;
+
+    var Player1Index = tmp1.findIndex(object => {
+        return object.name === Player1.name;
+    });
+
+    var Player2Index = tmp2.findIndex(object => {
+        return object.name === Player2.name;
+    });
+
+    tmp1.push(tmp2[Player2Index]);
+    tmp2.push(tmp1[Player1Index]);
+
+    if (Player1Index !== -1) {
+        tmp1.splice(Player1Index, 1);
+    }
+
+    if (Player2Index !== -1) {
+        tmp2.splice(Player2Index, 1);
+    }
+
+    tmp1.forEach(element => {
+        tmp1Rating += element.rating;
+    });
+
+    tmp2.forEach(element => {
+        tmp2Rating += element.rating;
+    });
+
+    let newRating = Math.abs(tmp1Rating - tmp2Rating);
+    let oldRating = Math.abs(Team1Rating - Team2Rating);
+    
+    if(oldRating <= newRating)
+    {
+        console.log("Invalid");
+        return false;
+    }
+    else
+    {
+        console.log("Valid");
+        return true;
     }
 }
 
