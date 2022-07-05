@@ -156,7 +156,7 @@ function Switch(e) {
     if (!e.target.classList.contains("fa-sync")) {
         return;
     }
-
+    
     // Get the name of the player to switch
     var name = e.path[3].children[0].innerText;
 
