@@ -62,6 +62,7 @@ var Index;
 
 // Switch List
 Team1PlayerSwitch = [];
+Team2PlayerSwitch = [];
 
 // ***CRUD START*** //
 
