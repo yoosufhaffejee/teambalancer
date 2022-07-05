@@ -37,7 +37,8 @@
         <label for="rating">Rating</label>
         <input class="form-control" type="number" min="1" max="5" name="rating" id="rating" />
       </div>
-      <button type="button" class="btn btn-primary" onclick="Add()"><i class="fa-solid fa-plus"></i> Add</button>
+      <button id="add" type="button" class="btn btn-primary" onclick="Add()"><i class="fa-solid fa-plus"></i> Add</button>
+      <button hidden id="update" type="button" class="btn btn-success" onclick="Update()"><i class="fa-solid fa-floppy-disk"></i> Update</button>
     </form>
 
     <div class="table-responsive">

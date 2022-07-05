@@ -32,9 +32,17 @@ const DefaultPlayers = [
 
 // List of all players
 var players = [];
+var picker;
 
 const tbody = document.getElementById("MainTableBody");
-const table = document.getElementById("MainTable");
+const edit = document.getElementById("edit");
+
+const name = document.getElementById("name");
+const position = document.getElementById("position");
+const rating = document.getElementById("rating");
+
+const btnAdd = document.getElementById("add");
+const btnUpdate = document.getElementById("update");
 
 // Team 1 Table
 const T1 = document.getElementById("Team1");
@@ -61,47 +69,53 @@ var posIndexes;
 var Index;
 
 // Switch List
-Team1PlayerSwitch = [];
-Team2PlayerSwitch = [];
+var Team1PlayerSwitch;
+var Team2PlayerSwitch;
+
+// UI Variables
+var UpdateIndex;
+
+var UpdateName;
+var UpdatePosition;
+var UpdateRating;
 
 // ***CRUD START*** //
 
 // Create
 function Add() {
-
-    var name = document.getElementById("name").value;
-    var position = document.getElementById("position").value;
-    var rating = document.getElementById("rating").value;
     
     // Check if a valid position was entered
-    if (positions.includes(position)) {
+    if (positions.includes(position.value)) {
 
         // Name and Rating should not be blank
-        if(name == "" || rating == "")
+        if(name.value == "" || rating.value == "")
         {
         	return;
         }
         
-        let p = new player(name, position, rating);
+        let p = new player(name.value, position.value, rating.value);
         
         // Only add if the player name is unused
-        if(CheckDuplicate(players, player) == false)
+        if(CheckDuplicate(players, p) == false)
         {
         	players.push(p);
-        }
-        
-        // Add a new row with player entry
-        tbody.innerHTML += `
-    	<tr>
-          <td>${name}</td>
-          <td>${position}</td>
-          <td>${rating}</td>
-          <td><a><i style="color: red" class="fa fa-trash"></i></a></td>
-    	</tr>
-    	`;
-    }
 
-    ClearForm();
+            // Add a new row with player entry
+            tbody.innerHTML += `
+            <tr>
+            <td>${name.value}</td>
+            <td>${position.value}</td>
+            <td>${rating.value}</td>
+            <td>
+                <a id="edit"><i style="color: gold" class="fa fa-pencil"></i></a>
+                <a id="delete"><i style="color: red" class="fa fa-trash"></i></a>
+            </td>
+            </tr>
+            `;
+
+            ClearForm();
+        }
+    }
 }
 
 // Read
@@ -118,17 +132,64 @@ function Load() {
 }
 
 // Update
-// TODO
+function Edit(e) {
 
+    // Get the name of the player to update
+    UpdateName = e.originalEvent.path[3].children[0];
+    UpdatePosition = e.originalEvent.path[3].children[1];
+    UpdateRating = e.originalEvent.path[3].children[2];
+
+    // Ensure the edit button was clicked, by returning if the class was not found
+    if (!e.target.classList.contains("fa-pencil")) {
+        return;
+    }
+
+    btnAdd.hidden = true;
+    btnUpdate.hidden = false;
+
+    name.value = UpdateName.innerHTML;
+    position.value = UpdatePosition.innerHTML;
+    rating.value = UpdateRating.innerHTML;
+
+    // Find the index of the player to update
+    UpdateIndex = players.findIndex(player => {
+        return player.name === UpdateName.innerHTML;
+    });
+}
+
+function Update()
+{
+    // Check if a valid position was entered
+    if (positions.includes(position.value)) {
+
+        let p = new player(name.value, position.value, rating.value);
+
+        // Only update if the player name is unused
+        if(CheckDuplicatePlayer(players, p) == false)
+        {
+        	players[UpdateIndex].name = name.value;
+            players[UpdateIndex].position = position.value;
+            players[UpdateIndex].rating = rating.value;
+
+            UpdateName.innerHTML = name.value;
+            UpdatePosition.innerHTML = position.value;
+            UpdateRating.innerHTML = rating.value;
+
+            ClearForm();
+            btnAdd.hidden = false;
+            btnUpdate.hidden = true;
+        }
+    }
+}
 
 // Delete
 function Delete(e) {
 
     // Get the name of the player to remove
-    var name = e.path[3].children[0].innerText;
+    var name = e.originalEvent.path[3].children[0].innerText;
 
     // Ensure the delete button was clicked, by returning if the class was not found
-    if (!e.target.classList.contains("fa-trash") && !e.target.style.color == "green") {
+    if (!e.target.classList.contains("fa-trash")) {
         return;
     }
 
@@ -154,7 +215,7 @@ function Delete(e) {
 function Switch(e) {
 
     // Ensure the switch button was clicked, by returning if the class was not found
-    if (!e.target.classList.contains("fa-sync")) {
+    if (!e.target.classList.contains("fa-sync")  && !e.target.style.color == "green") {
         return;
     }
     
@@ -164,35 +225,33 @@ function Switch(e) {
     // Get the table ID to know where to search for player
     var id = e.path[6].id;
 
-    if(id = "Team1")
+    if (id = "Team1")
     {
-        // Find the player to remove
-        let p = Team1.find((player) => player.name == name);
-        if(p!=null)
+        // Find the player to switch
+        let player = Team1.find((player) => player.name == name);
+        if (player != null)
         {
-            Team1PlayerSwitch.push(p);
+            Team1PlayerSwitch = player;
         }
     }
     
-    if(id = "Team2")
+    if (id = "Team2")
     {
-        // Find the player to remove
-        let p = Team2.find((player) => player.name == name);
-        if(p!=null)
+        // Find the player to switch
+        let player = Team2.find((player) => player.name == name);
+        if (player != null)
         {
-            Team2PlayerSwitch.push(p);
+            Team2PlayerSwitch = player;
         }
     }
 
     if(Team1PlayerSwitch != null && Team2PlayerSwitch != null)
     {
-        //console.log("T1", Team1PlayerSwitch);
-        //console.log("T2", Team2PlayerSwitch);
         swap(Team1, Team2, Team1PlayerSwitch, Team2PlayerSwitch);
-        
-        // Clear Switch Lits
-        Team1PlayerSwitch = [];
-        Team2PlayerSwitch = [];
+
+        // Clear Switch Vars
+        Team1PlayerSwitch = null;
+        Team2PlayerSwitch = null;
 
         // Repaint
         DrawTeamTable(Team1, T1B, Team1.length, Team1Rating);
@@ -201,7 +260,7 @@ function Switch(e) {
     else
     {
         if (e.target.classList.contains("fa-sync")) {
-            e.target.style.color = "grey";
+            e.target.style.color = "green";
         }
     }
 }
@@ -219,7 +278,7 @@ function Split() {
 
     // Random between (0-1) * 2 is either 1 or 2 rounded
     var coinFlip = Math.floor(Math.random() * 2);
-    var picker;
+    //var picker;
 
     if (coinFlip === 1) {
         picker = "Team1";
@@ -248,13 +307,13 @@ function Split() {
     });
     
     // Pick GK
-    PickPlayers(gk, picker);
+    PickPlayers(gk);
     // Pick DEF
-    PickPlayers(def, picker);
+    PickPlayers(def);
     // Pick MID
-    PickPlayers(mid, picker);
+    PickPlayers(mid);
     // Pick ATT
-    PickPlayers(att, picker);
+    PickPlayers(att);
 
     // Count the number of players in each team
     Team1Count = Team1.length;
@@ -397,7 +456,7 @@ function PlayersPerPosition(Team, Position, PositionArray)
 	});
 }
 
-function PickPlayers(PositionArray, CurrentPicker)
+function PickPlayers(PositionArray)
 {
 	// Store the origanl array length so it does not change when we remove elements
 	let length = PositionArray.length;
@@ -407,13 +466,13 @@ function PickPlayers(PositionArray, CurrentPicker)
         var random = Math.floor(Math.random() * PositionArray.length);
         var selectedPlayer = PositionArray[random];
 
-        if (CurrentPicker === "Team1") {
+        if (picker === "Team1") {
             Team1.push(selectedPlayer);
-            CurrentPicker = "Team2";
+            picker = "Team2";
         }
         else {
             Team2.push(selectedPlayer);
-            CurrentPicker = "Team1"
+            picker = "Team1"
         }
 
         var PlayerIndex = PositionArray.findIndex(p => {
@@ -446,7 +505,10 @@ function DrawMainTable(players, Table) {
                 <td>${player.name}</td>
                 <td>${player.position}</td>
                 <td>${player.rating}</td>
-                <td><a><i style="color: red" class="fa fa-trash"></i></a></td>
+                <td>
+                    <a id="edit"><i style="color: gold" class="fa fa-pencil"></i></a>
+                    <a id="delete"><i style="color: red" class="fa fa-trash"></i></a>
+                </td>
             </tr>
         `;
     });
@@ -465,7 +527,7 @@ function DrawTeamTable(Team, Table, Count, Rating) {
     		<td>${player.name}</td>
     		<td>${player.position}</td>
     		<td>${player.rating}</td>
-            <td><a><i style="color: green" class="fa fa-sync"></i></a></td>
+            <td><a><i style="color: gold" class="fa fa-sync"></i></a></td>
 		</tr>
 		`;
     });
@@ -481,9 +543,6 @@ function DrawTeamTable(Team, Table, Count, Rating) {
 }
 
 function ClearForm() {
-    const name = document.getElementById("name");
-    const position = document.getElementById("position");
-    const rating = document.getElementById("rating");
 
     name.value = "";
     position.value = "";
@@ -500,6 +559,12 @@ const sortByRating = (a, b) => {
     }
 
     return 0
+}
+
+function sortByPosition(a, b) {
+    var order = { GK: 1, DEF: 2, MID: 3, ATT: 4, default: 5 }
+
+    return (order[a.position] || order.default) - (order[b.position] || order.default);
 }
 
 function swap(Team1, Team2, Player1, Player2)
@@ -525,6 +590,9 @@ function swap(Team1, Team2, Player1, Player2)
 
     Team1Rating = CalculateRating(Team1);
     Team2Rating = CalculateRating(Team2);
+
+    Team1.sort(sortByPosition);
+    Team2.sort(sortByPosition);
 }
 
 function ValidSwap(Team1, Team2, Player1, Player2)
@@ -597,9 +665,25 @@ function CheckDuplicate(Team, Player)
 	}
 }
 
+function CheckDuplicatePlayer(Team, Player)
+{
+	let exists = Team.find((player) => player.name == Player.name && Player.position == player.position && Player.rating == player.rating);
+	if(exists)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 // ***HELPERS END*** //
 
 // Event Listeners
-table.addEventListener("click", Delete);
 T1.addEventListener("click", Switch);
 T2.addEventListener("click", Switch);
+
+// JQuery Listeners for dynamic objects
+$(document).on('click','#edit', Edit);
+$(document).on('click','#delete', Delete);
