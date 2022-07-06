@@ -160,7 +160,7 @@ function Edit(e) {
 function Update()
 {
     // Check if a valid position was entered
-    if (positions.includes(position.value)) {
+    if (positions.includes(position.value) && name.checkValidity() && rating.checkValidity()) {
 
         let p = new player(name.value, position.value, rating.value);
 
