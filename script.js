@@ -156,21 +156,10 @@ function Edit(e) {
         return player.name === UpdateName.innerHTML;
     });
 }
-function ValidPosition(Pos)
-{
-	if (positions.includes(Pos))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 function Update()
 {
-	// Check for duplicate name, and blank
+	// Check for blank and duplicate player entire object (If only name is checked, update rating/pos only is not possible)
 	let validName = (name.checkValidity() && (CheckDuplicatePlayer(players, players[UpdateIndex]) == false));
 	// Valid pos
 	let validPosition = ValidPosition(position.value);
@@ -612,6 +601,13 @@ function swap(Team1, Team2, Player1, Player2)
 
 function ValidSwap(Team1, Team2, Player1, Player2)
 {
+	let tmp1Rating = 0;
+    let tmp2Rating = 0;
+    
+    tmp1Rating = Team1Rating - Player1.rating + Player2.rating;
+    tmp2Rating = Team2Rating - Player2.rating + Player1.rating;
+    
+	/*
     tmp1 = [];
     Team1.forEach(element => {
         tmp1.push(element);
@@ -621,10 +617,7 @@ function ValidSwap(Team1, Team2, Player1, Player2)
     Team2.forEach(element => {
         tmp2.push(element);
     });
-
-    let tmp1Rating = 0;
-    let tmp2Rating = 0;
-
+    
     var Player1Index = tmp1.findIndex(object => {
         return object.name === Player1.name;
     });
@@ -651,18 +644,17 @@ function ValidSwap(Team1, Team2, Player1, Player2)
     tmp2.forEach(element => {
         tmp2Rating += element.rating;
     });
-
+    */
+    
     let newRating = Math.abs(tmp1Rating - tmp2Rating);
     let oldRating = Math.abs(Team1Rating - Team2Rating);
     
     if(oldRating <= newRating)
     {
-        console.log("Invalid");
         return false;
     }
     else
     {
-        console.log("Valid");
         return true;
     }
 }
@@ -684,6 +676,18 @@ function CheckDuplicatePlayer(Team, Player)
 {
 	let exists = Team.find((player) => player.name == Player.name && Player.position == player.position && Player.rating == player.rating);
 	if(exists)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function ValidPosition(Pos)
+{
+	if (positions.includes(Pos))
 	{
 		return true;
 	}
