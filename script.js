@@ -217,7 +217,10 @@ function Delete(e) {
 
 // Switch
 function Switch(e) {
-
+	
+	console.log(e);
+    console.log(e.target);
+    	
     // Ensure the switch button was clicked, by returning if the class was not found
     if (!e.target.classList.contains("fa-sync")) {
         return;
