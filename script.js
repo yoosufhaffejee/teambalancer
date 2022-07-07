@@ -219,7 +219,7 @@ function Delete(e) {
 function Switch(e) {
 
     // Ensure the switch button was clicked, by returning if the class was not found
-    if (!e.target.classList.contains("fa-sync")  && !e.target.style.color == "green") {
+    if (!e.target.classList.contains("fa-sync")) {
         return;
     }
     
@@ -228,7 +228,29 @@ function Switch(e) {
 
     // Get the table ID to know where to search for player
     var id = e.path[6].id;
-
+    
+    // Cancel a swap
+    if (e.target.style.color == "green")
+    {
+    	if (id = "Team1")
+    	{
+    		Team1PlayerSwitch = null;
+    	}
+    	
+    	if (id = "Team2")
+    	{
+    		Team2PlayerSwitch = null;
+    	}
+    	e.target.style.color == "gold";
+    }
+    
+    // Only allow one swap player to be selected per table
+    if (e.target.style.color == "gold")
+    {
+    	console.log(e);
+    	console.log(e.target);
+    }
+    
     if (id = "Team1")
     {
         // Find the player to switch
