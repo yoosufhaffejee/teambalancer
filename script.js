@@ -607,45 +607,6 @@ function ValidSwap(Team1, Team2, Player1, Player2)
     tmp1Rating = Team1Rating - Player1.rating + Player2.rating;
     tmp2Rating = Team2Rating - Player2.rating + Player1.rating;
     
-	/*
-    tmp1 = [];
-    Team1.forEach(element => {
-        tmp1.push(element);
-    });
-
-    tmp2 = [];
-    Team2.forEach(element => {
-        tmp2.push(element);
-    });
-    
-    var Player1Index = tmp1.findIndex(object => {
-        return object.name === Player1.name;
-    });
-
-    var Player2Index = tmp2.findIndex(object => {
-        return object.name === Player2.name;
-    });
-
-    tmp1.push(tmp2[Player2Index]);
-    tmp2.push(tmp1[Player1Index]);
-
-    if (Player1Index !== -1) {
-        tmp1.splice(Player1Index, 1);
-    }
-
-    if (Player2Index !== -1) {
-        tmp2.splice(Player2Index, 1);
-    }
-
-    tmp1.forEach(element => {
-        tmp1Rating += element.rating;
-    });
-
-    tmp2.forEach(element => {
-        tmp2Rating += element.rating;
-    });
-    */
-    
     let newRating = Math.abs(tmp1Rating - tmp2Rating);
     let oldRating = Math.abs(Team1Rating - Team2Rating);
     
