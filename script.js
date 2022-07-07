@@ -120,13 +120,26 @@ function Add() {
 
 // Read
 function Load() {
-    // Add the pre-loaded data to the player list
+
+    //Add the pre-loaded data to the player list
     DefaultPlayers.forEach(player => {
     	if(CheckDuplicate(players, player) == false)
     	{
     		players.push(player);
     	}
     });
+
+    DrawMainTable(players, tbody);
+}
+
+function TestLoad(multiplier)
+{
+    for(let i = 0; i < multiplier; i++)
+    {
+        DefaultPlayers.forEach(player => {
+            players.push(player);
+        });
+    }
 
     DrawMainTable(players, tbody);
 }
@@ -217,9 +230,6 @@ function Delete(e) {
 
 // Switch
 function Switch(e) {
-	
-	console.log(e);
-    console.log(e.target);
     	
     // Ensure the switch button was clicked, by returning if the class was not found
     if (!e.target.classList.contains("fa-sync")) {
@@ -235,6 +245,8 @@ function Switch(e) {
     // Cancel a swap
     if (e.target.style.color == "green")
     {
+        e.target.style.color = "gold";
+
     	if (id = "Team1")
     	{
     		Team1PlayerSwitch = null;
@@ -244,36 +256,46 @@ function Switch(e) {
     	{
     		Team2PlayerSwitch = null;
     	}
-    	e.target.style.color == "gold";
     }
-    
-    // Only allow one swap player to be selected per table
-    if (e.target.style.color == "gold")
+    else
     {
-    	console.log(e);
-    	console.log(e.target);
-    }
-    
-    if (id = "Team1")
-    {
-        // Find the player to switch
-        let player = Team1.find((player) => player.name == name);
-        if (player != null)
+        // Only allow one swap player to be selected per table
+        let Team1Buttons = $("#Team1Body").find(".fa-sync");
+        let Team2Buttons = $("#Team2Body").find(".fa-sync");
+        
+        Array.from(Team1Buttons).forEach(element => {
+            element.style.color = "gold";
+        });
+
+        Array.from(Team2Buttons).forEach(element => {
+            element.style.color = "gold";
+        });
+
+        if (id = "Team1")
         {
-            Team1PlayerSwitch = player;
+            // Find the player to switch
+            let player = Team1.find((player) => player.name == name);
+            if (player != null)
+            {
+                Team1PlayerSwitch = player;
+            }
         }
-    }
-    
-    if (id = "Team2")
-    {
-        // Find the player to switch
-        let player = Team2.find((player) => player.name == name);
-        if (player != null)
+        
+        if (id = "Team2")
         {
-            Team2PlayerSwitch = player;
+            // Find the player to switch
+            let player = Team2.find((player) => player.name == name);
+            if (player != null)
+            {
+                Team2PlayerSwitch = player;
+            }
         }
+
+        // Set the button colour green
+        e.target.style.color = "green";
     }
 
+    // If there are 2 players to swap, Switch their teams
     if(Team1PlayerSwitch != null && Team2PlayerSwitch != null)
     {
         swap(Team1, Team2, Team1PlayerSwitch, Team2PlayerSwitch);
@@ -286,12 +308,6 @@ function Switch(e) {
         DrawTeamTable(Team1, T1B, Team1.length, Team1Rating);
         DrawTeamTable(Team2, T2B, Team2.length, Team2Rating);
     }
-    else
-    {
-        if (e.target.classList.contains("fa-sync")) {
-            e.target.style.color = "green";
-        }
-    }
 }
 
 // ***CRUD END*** //
@@ -299,6 +315,7 @@ function Switch(e) {
 function Split() {
 	
 	ResetTeams();
+    CalculateTotalRating();
 	
     gk = new Array();
     def = new Array();
@@ -363,6 +380,9 @@ function Split() {
 
 function Balance()
 {
+    console.log("T1 Old Rating: ", Team1Rating);
+    console.log("T2 Old Rating: ", Team2Rating);
+
 	if(Team1Rating == Team2Rating)
 	{
 		return;
@@ -380,9 +400,9 @@ function Balance()
 	PlayersPerPosition(Team2, 'DEF', T2D);
 	PlayersPerPosition(Team2, 'MID', T2M);
 	PlayersPerPosition(Team2, 'ATT', T2A);
-	
-  var randomPositionSelector;
+
   var shortfall;
+  var randomPositionSelector;
 
   diff = Math.abs(Team1Rating - Team2Rating);
 
@@ -399,13 +419,18 @@ function Balance()
     while (posIndexes.length > 0) {
 
         whileCount++;
+        console.log("loop:", whileCount);
         
         // Randomly selects the pos the check for a swap, this is to ensure teams will not always be same.
         randomPositionSelector = Math.floor(Math.random() * posIndexes.length);
-        
-        // Find the index to remove from array of position indexes (e.g GK will not be checked again), -1 due to length
+
+        if(whileCount > players.length * 2)
+        {
+            break;
+        }
+
+        // Find the index to check from array of position indexes (e.g GK will not be checked again), -1 due to length
         index = posIndexes[randomPositionSelector - 1];
-        posIndexes.splice(index, 1);
         
         // One of these would run depending on the posIndex
         FindPlayersToSwap(T1GK, T2GK, 'GK', shortfall);
@@ -419,6 +444,9 @@ function Balance()
         DrawTeamTable(Team1, T1B, Team1Count, Team1Rating);
         DrawTeamTable(Team2, T2B, Team2Count, Team2Rating);
     }
+    console.log("While Loop Counter: ", whileCount);
+    console.log("T1 New Rating: ", Team1Rating);
+    console.log("T2 New Rating: ", Team2Rating);
 }
 
 // ***HELPERS START*** //
@@ -451,19 +479,21 @@ function FindPlayersToSwap(PositionArray1, PositionArray2, Position, Shortfall)
 	if (positions[index] == Position) 
 	{
 		// Sorting might make finding a match quicker
-		PositionArray1.sort(sortByRating);
-        PositionArray2.sort(sortByRating);
+		//PositionArray1.sort(sortByRating);
+        //PositionArray2.sort(sortByRating);
 
         for (let i = 0; i < PositionArray1.length; i++) {
             for (let j = 0; j < PositionArray2.length; j++) {
 
-                if (Math.abs(PositionArray1[i].rating - PositionArray2[j].rating) <= Shortfall && ValidSwap(Team1, Team2, PositionArray1[i], PositionArray2[j])) {
+                let Delta = Math.abs(PositionArray1[i].rating - PositionArray2[j].rating);
+
+                if (Delta <= Shortfall && ValidSwap(PositionArray1[i], PositionArray2[j])) {
                 	
                     console.log("swapping", PositionArray1[i], PositionArray2[j]);
                     // Swap players
                     swap(Team1, Team2, PositionArray1[i], PositionArray2[j]);
                     // Break While (Do not check for valid swaps in other positions)
-                    if(Math.abs(PositionArray1[i].rating - PositionArray2[j].rating) == Shortfall)
+                    if(Delta == Shortfall  || (Math.ceil(TotalRating % 2) == 1))
                     {
                         posIndexes = [];
                     }
@@ -472,7 +502,46 @@ function FindPlayersToSwap(PositionArray1, PositionArray2, Position, Shortfall)
                 }
             }
         }
+
+        // A position will only be removed if all options are exhausted
+        posIndexes.splice(index, 1);
+        return;
     }
+}
+
+function swap(Team1, Team2, Player1, Player2)
+{
+    var Player1Index = Team1.findIndex(object => {
+        return object.name === Player1.name;
+    });
+
+    var Player2Index = Team2.findIndex(object => {
+        return object.name === Player2.name;
+    });
+
+    if (Player1Index !== -1) {
+        Team1.push(Team2[Player2Index]);
+    }
+    
+    if (Player2Index !== -1) {
+        Team2.push(Team1[Player1Index]);
+    }
+
+    if (Player1Index !== -1) {
+        Team1.splice(Player1Index, 1);
+    }
+
+    if (Player2Index !== -1) {
+        Team2.splice(Player2Index, 1);
+    }
+
+    Team1Rating = CalculateRating(Team1);
+    Team2Rating = CalculateRating(Team2);
+
+    Team1.sort(sortByPosition);
+    Team2.sort(sortByPosition);
+
+    return;
 }
 
 function PlayersPerPosition(Team, Position, PositionArray)
@@ -596,35 +665,7 @@ function sortByPosition(a, b) {
     return (order[a.position] || order.default) - (order[b.position] || order.default);
 }
 
-function swap(Team1, Team2, Player1, Player2)
-{
-    var Player1Index = Team1.findIndex(object => {
-        return object.name === Player1.name;
-    });
-
-    var Player2Index = Team2.findIndex(object => {
-        return object.name === Player2.name;
-    });
-
-    Team1.push(Team2[Player2Index]);
-    Team2.push(Team1[Player1Index]);
-
-    if (Player1Index !== -1) {
-        Team1.splice(Player1Index, 1);
-    }
-
-    if (Player2Index !== -1) {
-        Team2.splice(Player2Index, 1);
-    }
-
-    Team1Rating = CalculateRating(Team1);
-    Team2Rating = CalculateRating(Team2);
-
-    Team1.sort(sortByPosition);
-    Team2.sort(sortByPosition);
-}
-
-function ValidSwap(Team1, Team2, Player1, Player2)
+function ValidSwap(Player1, Player2)
 {
 	let tmp1Rating = 0;
     let tmp2Rating = 0;
