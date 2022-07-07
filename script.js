@@ -161,20 +161,21 @@ function Update()
 {
     // Check if a valid position was entered
     if (positions.includes(position.value) && name.checkValidity() && rating.checkValidity()) {
-
-        let p = new player(name.value, position.value, rating.value);
-
+    	
         // Only update if the player name is unused
-        if(CheckDuplicatePlayer(players, p) == false)
+        if(CheckDuplicatePlayer(players, players[UpdateIndex]) == false)
         {
+        	// Update player list
         	players[UpdateIndex].name = name.value;
             players[UpdateIndex].position = position.value;
             players[UpdateIndex].rating = rating.value;
-
+            
+            // Update HTML
             UpdateName.innerHTML = name.value;
             UpdatePosition.innerHTML = position.value;
             UpdateRating.innerHTML = rating.value;
-
+            
+            // Clean up UI
             ClearForm();
             btnAdd.hidden = false;
             btnUpdate.hidden = true;
