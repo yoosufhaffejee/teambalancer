@@ -156,30 +156,44 @@ function Edit(e) {
         return player.name === UpdateName.innerHTML;
     });
 }
+function ValidPosition(Pos)
+{
+	if (positions.includes(Pos))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 function Update()
 {
-    // Check if a valid position was entered
-    if (positions.includes(position.value) && name.checkValidity() && rating.checkValidity()) {
-    	
-        // Only update if the player name is unused
-        if(CheckDuplicatePlayer(players, players[UpdateIndex]) == false)
-        {
-        	// Update player list
-        	players[UpdateIndex].name = name.value;
-            players[UpdateIndex].position = position.value;
-            players[UpdateIndex].rating = rating.value;
-            
-            // Update HTML
-            UpdateName.innerHTML = name.value;
-            UpdatePosition.innerHTML = position.value;
-            UpdateRating.innerHTML = rating.value;
-            
-            // Clean up UI
-            ClearForm();
-            btnAdd.hidden = false;
-            btnUpdate.hidden = true;
-        }
+	// Check for duplicate name, and blank
+	let validName = (name.checkValidity() && (CheckDuplicatePlayer(players, players[UpdateIndex]) == false));
+	// Valid pos
+	let validPosition = ValidPosition(position.value);
+	// Must be a number 1 -5
+	let validRating = rating.checkValidity();
+	
+	// Only update if all conditions are met
+    if (validName && validPosition && validRating) 
+    {
+    	// Update player list
+    	players[UpdateIndex].name = name.value;
+        players[UpdateIndex].position = position.value;
+        players[UpdateIndex].rating = rating.value;
+        
+        // Update HTML
+        UpdateName.innerHTML = name.value;
+        UpdatePosition.innerHTML = position.value;
+        UpdateRating.innerHTML = rating.value;
+        
+        // Clean up UI
+        ClearForm();
+        btnAdd.hidden = false;
+        btnUpdate.hidden = true;
     }
 }
 
