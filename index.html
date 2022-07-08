@@ -20,11 +20,11 @@
 
     <form id="AddPlayerForm">
       <div class="form-group">
-        <label for="Name">Name</label>
+        <label for="Name">Player Name</label>
         <input class="form-control" type="text" name="Name" id="name" required />
       </div>
       <div class="form-group">
-        <label for="position">Position</label>
+        <label for="position">Player Position</label>
         <input class="form-control" list="positions" name="position" id="position" required/>
         <datalist id="positions">
           <option value="GK"></option>
@@ -34,7 +34,7 @@
         </datalist>
       </div>
       <div class="form-group">
-        <label for="rating">Rating</label>
+        <label for="rating">5 Star Rating</label>
         <input class="form-control" type="number" min="1" max="5" name="rating" id="rating" required/>
       </div>
       <button id="add" type="button" class="btn btn-primary" onclick="Add()"><i class="fa-solid fa-plus"></i> Add</button>

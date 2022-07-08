@@ -12,17 +12,17 @@ const positions = ['GK','DEF','MID','ATT']
 
 // List of pre-loaded player data.
 const DefaultPlayers = [
-    new player("Yoosuf Haffejee", positions[3], 5),
-    new player("Luqmaan Haffejee", positions[1], 4),
+    new player("Yoosuf Haffejee", positions[3], 3),
+    new player("Luqmaan Haffejee", positions[1], 3),
     new player("Muhammad Haffejee", positions[1], 3),
     new player("Ahmed Haffejee", positions[3], 3),
-    new player("Ar Chothia", positions[2], 5),
-    new player("Mumu Chothia", positions[2], 4),
-    new player("Eesa Chothia", positions[3], 4),
-    new player("Usaamah Chothia", positions[0], 5),
+    new player("Ar Chothia", positions[2], 3),
+    new player("Mumu Chothia", positions[2], 3),
+    new player("Eesa Chothia", positions[3], 3),
+    new player("Usaamah Chothia", positions[0], 3),
     new player("Shezaad Khan", positions[1], 3),
-    new player("Momo Khan", positions[2], 4),
-    new player("Dadz Wadee", positions[1], 5),
+    new player("Momo Khan", positions[2], 3),
+    new player("Dadz Wadee", positions[1], 3),
     new player("Mutasim Haffejee", positions[1], 3),
     new player("Ash Bulbulia", positions[3], 3),
     new player("Zak Limbada", positions[0], 3),
@@ -172,8 +172,11 @@ function Edit(e) {
 
 function Update()
 {
+    // Update data from form
+    let p = new player(name.value, position.value, rating.value);
+
 	// Check for blank and duplicate player entire object (If only name is checked, update rating/pos only is not possible)
-	let validName = (name.checkValidity() && (CheckDuplicatePlayer(players, players[UpdateIndex]) == false));
+	let validName = (name.checkValidity() && (CheckDuplicatePlayer(players, p) == false));
 	// Valid pos
 	let validPosition = ValidPosition(position.value);
 	// Must be a number 1 -5
@@ -196,6 +199,10 @@ function Update()
         ClearForm();
         btnAdd.hidden = false;
         btnUpdate.hidden = true;
+    }
+    else
+    {
+        alert("Data is invalid or unchanged!");
     }
 }
 
