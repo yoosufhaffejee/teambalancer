@@ -51,6 +51,7 @@ const DefaultPlayers2 = [
 ];
 
 isSingleClick: Boolean = true;
+var repeat = 10;
 
 // List of all players
 var players = [];
@@ -381,7 +382,7 @@ function Switch(e) {
 
 function Split() {
 	
-	ResetTeams();
+    ResetTeams();
     CalculateTotalRating();
 	
     gk = new Array();
@@ -491,7 +492,7 @@ function Balance()
         // Randomly selects the pos the check for a swap, this is to ensure teams will not always be same.
         randomPositionSelector = Math.floor(Math.random() * posIndexes.length);
 
-        if(whileCount > players.length * 2)
+        if(whileCount > repeat)
         {
             break;
         }
