@@ -30,6 +30,28 @@ const DefaultPlayers = [
     new player("Wadeson", positions[2], 3)
 ];
 
+// List of pre-loaded player data.
+const DefaultPlayers2 = [
+    new player("Yoosuf Haffejee", positions[3], 5),
+    new player("Luqmaan Haffejee", positions[1], 4),
+    new player("Muhammad Haffejee", positions[1], 3),
+    new player("Ahmed Haffejee", positions[3], 3),
+    new player("Ar Chothia", positions[2], 5),
+    new player("Mumu Chothia", positions[2], 3),
+    new player("Eesa Chothia", positions[3], 4),
+    new player("Usaamah Chothia", positions[0], 5),
+    new player("Shezaad Khan", positions[1], 3),
+    new player("Momo Khan", positions[2], 5),
+    new player("Dadz Wadee", positions[1], 5),
+    new player("Mutasim Haffejee", positions[1], 3),
+    new player("Ash Bulbulia", positions[3], 3),
+    new player("Zak Limbada", positions[0], 3),
+    new player("Boom", positions[1], 3),
+    new player("Wadeson", positions[2], 3)
+];
+
+isSingleClick: Boolean = true;
+
 // List of all players
 var players = [];
 var picker;
@@ -81,9 +103,28 @@ var UpdateRating;
 
 // ***CRUD START*** //
 
+function Dev()
+{
+    if(name.value == 'LoopLoad' && position.value == 'Dev')
+    {
+        TestLoad(parseInt(rating.value));
+        ClearForm();
+        return;
+    }
+
+    if(name.value == 'FixRatings' && position.value == 'Dev')
+    {
+        Load2();
+        ClearForm();
+        return;
+    }
+}
+
 // Create
 function Add() {
-    
+
+    Dev();
+
     // Check if a valid position was entered
     if (positions.includes(position.value)) {
 
@@ -121,8 +162,27 @@ function Add() {
 // Read
 function Load() {
 
+    this.isSingleClick = true;
+    setTimeout(() => {
+        if (this.isSingleClick) {
+            //Add the pre-loaded data to the player list
+            DefaultPlayers.forEach(player => {
+                if (CheckDuplicate(players, player) == false) {
+                    players.push(player);
+                }
+            });
+
+            DrawMainTable(players, tbody);
+        }
+    }, 250)
+}
+
+// Read
+function Load2() {
+
+    this.isSingleClick = false;
     //Add the pre-loaded data to the player list
-    DefaultPlayers.forEach(player => {
+    DefaultPlayers2.forEach(player => {
     	if(CheckDuplicate(players, player) == false)
     	{
     		players.push(player);
