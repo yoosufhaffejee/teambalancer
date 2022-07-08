@@ -196,7 +196,7 @@ function TestLoad(multiplier)
 {
     for(let i = 0; i < multiplier; i++)
     {
-        DefaultPlayers.forEach(player => {
+        DefaultPlayers2.forEach(player => {
             players.push(player);
         });
     }
